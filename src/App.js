@@ -1,25 +1,53 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import { access } from "./api";
+/* import Header from "./components/layout/Header"; */
+import Home from "./components/home/Home";
+import Login from "./components/access/Login";
+import Register from "./components/access/Register";
+import UserContext from "./context/UserContext";
 
 function App() {
+  const [user, setUser] = useState({
+    token: undefined,
+    user: undefined,
+  });
+
+  useEffect(() => {
+    /* const checkLoggedIn = async () => {
+      let token = localStorage.getItem("auth-token");
+      if (token === null) {
+        localStorage.setItem("auth-token", "");
+        token = "";
+      }
+      const tokenRes = await access.verifyToken(token);
+      if (tokenRes.data) {
+        const userRes = await access.getUser(token);
+        setUser({
+          token,
+          user: userRes.data,
+        });
+      }
+    };
+
+    checkLoggedIn(); */
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <BrowserRouter>
+        <UserContext.Provider value={{ user, setUser }}>
+          {/* <Header /> */}
+          <div className="container">
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route path="/login" component={Login} />
+              <Route path="/register" component={Register} />
+            </Switch>
+          </div>
+        </UserContext.Provider>
+      </BrowserRouter>
+    </>
   );
 }
 
