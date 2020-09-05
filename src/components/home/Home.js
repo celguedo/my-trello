@@ -10,6 +10,7 @@ import { FETCH_STATUS } from "../../config";
 import Spinner from "emerald-ui/lib/Spinner";
 import styled from "styled-components";
 import Board from "./Board";
+import { getToken, setToken } from "../../utils";
 
 const PanelStyled = styled(Panel)`
   padding: 30px;
@@ -21,10 +22,9 @@ export default function Home() {
   const history = useHistory();
 
   const logout = async () => {
-    let token = localStorage.getItem("auth-token");
+    let token = getToken();
     await access.logout(token);
-
-    localStorage.setItem("auth-token", "");
+    setToken("");
     history.go();
   };
 

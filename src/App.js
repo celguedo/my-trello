@@ -6,6 +6,7 @@ import Home from "./components/home/Home";
 import Login from "./components/access/Login";
 import Register from "./components/access/Register";
 import UserContext from "./context/UserContext";
+import { getToken, setToken } from "./utils";
 
 function App() {
   const [user, setUser] = useState({
@@ -16,10 +17,10 @@ function App() {
 
   useEffect(() => {
     const checkLoggedIn = async () => {
-      let token = localStorage.getItem("auth-token");
+      let token = getToken();
       if (token === null) {
-        localStorage.setItem("auth-token", "");
         token = "";
+        setToken(token);
       }
       const tokenRes = await access.verifyToken(token);
       if (tokenRes.data) {

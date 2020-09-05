@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import { access } from "../../api";
 import Button from "emerald-ui/lib/Button";
+import { setToken } from "../../utils";
 
 export default function Register() {
   const [email, setEmail] = useState();
@@ -30,7 +31,7 @@ export default function Register() {
         token: loginRes.data.token,
         user: loginRes.data.user
       });
-      localStorage.setItem("auth-token", loginRes.data.token);
+      setToken(loginRes.data.token);
       history.push("/");
     } catch (err) {
       err.response.data.msg && setError(err.response.data.msg);
@@ -74,7 +75,7 @@ export default function Register() {
           onChange={(e) => setDisplayName(e.target.value)}
         />
 
-        <Button type="submit" color="primary">
+        <Button type="submit" color="success">
           Register
         </Button>
       </form>
