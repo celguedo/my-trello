@@ -9,6 +9,14 @@ export const createList = async (token, name) => {
   );
 };
 
+export const deleteList = async (token, id) => {
+  return await myTrelloRequestInstance.post(
+    `${config.SERVER_URL}/list/delete`,
+    { id },
+    { headers: { "x-auth-token": token } }
+  );
+};
+
 export const getList = async (token) => {
   return await myTrelloRequestInstance.get(`${config.SERVER_URL}/list/get`, {
     headers: { "x-auth-token": token },

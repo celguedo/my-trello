@@ -70,7 +70,7 @@ export default function List({
             <DropdownItem onClick={() => onEdit(data._id)} eventKey="1">
               Edit
             </DropdownItem>
-            <DropdownItem onClick={() => onDelete(data._id)} eventKey="2">
+            <DropdownItem onClick={() => onDelete(data._id, data.name)} eventKey="2">
               Delete
             </DropdownItem>
           </DropdownButtonStyled>
