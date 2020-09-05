@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useHistory } from "react-router-dom";
 import UserContext from "../../context/UserContext";
 import { access } from "../../api";
+import Button from "emerald-ui/lib/Button";
 
 export default function Login() {
   const [email, setEmail] = useState();
@@ -10,6 +11,10 @@ export default function Login() {
 
   const { setUser } = useContext(UserContext);
   const history = useHistory();
+
+  const goBack = () => {
+    history.push("/");
+  }
 
   const submit = async (e) => {
     e.preventDefault();
@@ -27,8 +32,9 @@ export default function Login() {
     }
   };
   return (
-    <div className="page">
-      <h2>Log in</h2>
+    <div className="container panel-center">
+      <h1>My Trello App - Access</h1>
+      <br />
       {error && (
         <div className="error-notice">
           <span>{error}</span>
@@ -49,9 +55,12 @@ export default function Login() {
           type="password"
           onChange={(e) => setPassword(e.target.value)}
         />
-
-        <input type="submit" value="Log in" />
+        <Button type="submit" color="primary">
+          Log In
+        </Button>
       </form>
+      <br />
+      <Button onClick={goBack}>Go Back</Button>
     </div>
   );
 }

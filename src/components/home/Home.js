@@ -24,7 +24,6 @@ export default function Home() {
     await access.logout(token);
 
     localStorage.setItem("auth-token", "");
-    history.push("/");
     history.go();
   };
 
