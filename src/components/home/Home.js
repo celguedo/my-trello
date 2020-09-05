@@ -9,6 +9,7 @@ import { access } from "../../api";
 import { FETCH_STATUS } from "../../config";
 import Spinner from "emerald-ui/lib/Spinner";
 import styled from "styled-components";
+import Board from "./Board";
 
 const PanelStyled = styled(Panel)`
   padding: 30px;
@@ -30,7 +31,10 @@ export default function Home() {
   return (
     <>
       {user.user ? (
-        <Navbar name={user.user.displayName} logout={logout} />
+        <div>
+          <Navbar name={user.user.displayName} logout={logout} />
+          <Board />
+        </div>
       ) : (
         <div className="container panel-center">
           {fetchStatus === FETCH_STATUS.LOADING ? (
