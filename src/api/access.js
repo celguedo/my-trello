@@ -28,3 +28,12 @@ export const register = async (newUser) => {
     newUser
   );
 };
+
+export const logout = async (token) => {
+  return await myTrelloRequestInstance.get(
+    `${config.SERVER_URL}/users/logout`,
+    {
+      headers: { "x-auth-token": token },
+    }
+  );
+};

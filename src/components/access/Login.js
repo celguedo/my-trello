@@ -31,8 +31,8 @@ export default function Login() {
       <h2>Log in</h2>
       {error && (
         <div className="error-notice">
-            <span>{error}</span>
-            <button onClick={() => setError(undefined)}>X</button>
+          <span>{error}</span>
+          <button onClick={() => setError(undefined)}>X</button>
         </div>
       )}
       <form className="form" onSubmit={submit}>

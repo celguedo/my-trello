@@ -118,6 +118,10 @@ body {
   font-size: 1.1rem;
 }
 
+.panel-center {
+  text-align: center;
+  margin: 40px
+}
 /* todo list */
 
 .todo-list ul {
