@@ -7,6 +7,7 @@ import { card } from "../../api";
 import { getToken, mapLabelPositionCard } from "../../utils";
 import { colorOptions, positionOptions } from "../../constants";
 import Label from "emerald-ui/lib/Label/Label";
+import {LabelRight} from "./Card";
 
 export default function ModalMessage({
   show,
@@ -103,14 +104,32 @@ export default function ModalMessage({
           listId: listOfCard,
         };
         await card.updateCard(token, editData);
-        
+
         primaryAction();
         cancelAction();
       }
     } catch (err) {
-      setTextStatus("The card was not created please try again");
+      setTextStatus("The card was not update, please try again");
       setShowTextStatus(true);
-      console.error("An error while the card was created: ", err);
+      console.error("An error while the card was updated: ", err);
+    }
+  };
+
+  const toogleArchiveCard = async () => {
+    try {
+      const token = getToken();
+      const editData = {
+        idCard: currentCard._id,
+        status: !currentCard.status,
+      };
+      await card.updateCard(token, editData);
+
+      primaryAction();
+      cancelAction();
+    } catch (err) {
+      setTextStatus("The card was not updated please try again");
+      setShowTextStatus(true);
+      console.error("An error while the card was updated: ", err);
     }
   };
 
@@ -191,6 +210,7 @@ export default function ModalMessage({
             <Modal.Title>
               <Label color={labelCard.colorLabel}>{labelCard.label}</Label>
               <b>{` ${currentCard.title}`}</b>
+              {!currentCard.status && <LabelRight color="warning">This card is archived</LabelRight>}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
@@ -198,14 +218,19 @@ export default function ModalMessage({
               <p>{currentCard.description || "Not description"}</p>
             </div>
             <hr />
-            <label>Move card to</label>
-            <br />
-            <SelectOption
-              id="s1"
-              onSelect={setListOfCard}
-              currentSelect={currentCard.listId}
-              options={listOptions}
-            />
+            {currentCard.status && (
+              <div>
+                <label>Move card to</label>
+                <br />
+                <SelectOption
+                  id="s1"
+                  onSelect={setListOfCard}
+                  currentSelect={currentCard.listId}
+                  options={listOptions}
+                />
+              </div>
+            )}
+
             <Alert
               text={textStatus}
               show={showTextStatus}
@@ -217,13 +242,17 @@ export default function ModalMessage({
               Cancel
             </Button>
             <Button>Edit</Button>
-            <Button color="warning">Archive</Button>
+            <Button color="warning" onClick={toogleArchiveCard}>
+              {currentCard.status ? "Archive" : "Unarchive"}
+            </Button>
             <Button color="danger" onClick={deleteCard}>
               Delete
             </Button>
-            <Button color="success" onClick={saveEditCard}>
-              Save Changes
-            </Button>
+            {currentCard.status && (
+              <Button color="success" onClick={saveEditCard}>
+                Save Changes
+              </Button>
+            )}
           </Modal.Footer>
         </>
       )}

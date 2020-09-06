@@ -15,15 +15,20 @@ const DivStyled = styled.div`
   position: relative;
 `;
 
+export const LabelRight = styled(Label)`
+float: right;
+`;
+
 export default function CardTrello({ data, viewCard }) {
   const { label, colorLabel } = mapLabelPositionCard(data.position);
 
   return (
     <CardStyled onClick={() => viewCard(data)}>
       <Card.Header color={data.color}>
-        <h1 className={`eui-card-header-title`}>
+        <h2 className={`eui-card-header-title`} style={{width: "100%"}}>
           <Label color={colorLabel}>{label}</Label>
-        </h1>
+          {!data.status && <LabelRight color="warning">Archive</LabelRight>}
+        </h2>
       </Card.Header>
       <DivStyled>
         <h2 className="eui-card-title">{data.title}</h2>

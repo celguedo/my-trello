@@ -63,7 +63,6 @@ export default function Board() {
       if (token === null) {
         token = "";
         setToken(token);
-        
       }
       const listResponse = await list.getList(token);
       const cardResponse = await card.getCard(token, {
@@ -98,7 +97,11 @@ export default function Board() {
           data={ele}
           onDelete={deleteList}
           onEdit={editList}
-          cards={cards.filter((item) => item.listId === ele._id)}
+          cards={cards.filter(
+            (cardItem) =>
+              cardItem.listId === ele._id &&
+              !cardItem.status === searchArchivesFilters
+          )}
           viewCard={viewCard}
         />
       );
@@ -159,7 +162,6 @@ export default function Board() {
   const filterCards = async ({ own = false, archive = false }) => {
     setSearchOwnFilters(own);
     setSearchArchivesFilters(archive);
-    
   };
 
   const viewCard = (cardData) => {
@@ -196,6 +198,11 @@ export default function Board() {
         <div>
           <label style={{ fontSize: "large", fontWeight: "bold" }}>
             Main Board
+            {(searchOwnFilters || searchArchivesFilters) && (
+              <span style={{ fontSize: "small", fontWeight: "bold" }}>
+               {` - (A search filter activated)`}
+              </span>
+            )}
           </label>
           <IconDropdownRightStyled
             ariaLabel="See more options"
