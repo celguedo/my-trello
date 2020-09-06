@@ -86,10 +86,10 @@ body {
 /* form */
 
 .form label,
-.form input {
+.form input textarea {
   display: block;
 }
-.form input {
+.form input textarea {
   margin-bottom: 1rem;
 }
 .form label {
@@ -97,13 +97,14 @@ body {
 }
 .form input[type="text"],
 .form input[type="email"],
-.form input[type="password"] {
+.form input[type="password"],
+.form textarea{
   width: 100%;
   padding: 0.3rem;
   border: 1px solid #c2c2c2;
   border-radius: 8px;
   background-color: #f0f0f0;
-  font-size: 1.1rem;
+  /* font-size: 1.1rem; */
 }
 .form input:focus {
   border: 1px solid #50a4e9;

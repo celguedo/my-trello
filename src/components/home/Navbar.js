@@ -27,7 +27,7 @@ export default function NavbarTrello({ name, logout }) {
           id="dd2"
           title={<Avatar title={initialsName} />}
         >
-          <DropdownItem eventKey="1">Actions</DropdownItem>
+          <DropdownItem eventKey="1">Search Cards Created by me</DropdownItem>
           <DropdownItem separator />
           <DropdownItem eventKey="4" onClick={logout}>
             Logout

@@ -1,10 +1,11 @@
 import axios from "axios";
 import * as access from "./access";
 import * as list from "./list";
+import * as card from "./card";
 
 const config = require("../config");
 
-export { access, list };
+export { access, list, card };
 
 export const myTrelloRequestInstance = axios.create({
   baseURL: config.SERVER_URL /* ,

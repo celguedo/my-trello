@@ -4,6 +4,7 @@ import CardGrid from "emerald-ui/lib/CardGrid";
 import Button from "emerald-ui/lib/Button";
 import DropdownButton from "emerald-ui/lib/DropdownButton";
 import DropdownItem from "emerald-ui/lib/DropdownItem";
+import Card from "./Card";
 
 const ListContainer = styled(CardGrid)`
   -webkit-box-shadow: 7px 4px 49px -16px rgba(0, 0, 0, 0.64);
@@ -34,14 +35,27 @@ const DivStyled = styled.div`
   position: relative;
 `;
 
+const DivContainerStyled = styled.div`
+  overflow-y: auto;
+  height: 640px;
+`;
+
 export default function List({
   data = {},
+  cards = [],
   onDelete,
   onEdit,
   newEdit = false,
   saveList,
 }) {
   const [newListName, setNewListName] = useState("");
+
+  const MapCards = () => {
+    const Cards = cards.map((ele) => {
+      return <Card key={ele._id} data={ele} />;
+    });
+    return Cards;
+  };
 
   return (
     <ListContainer>
@@ -66,11 +80,18 @@ export default function List({
       ) : (
         <DivStyled>
           <p className="list-title">{data.name}</p>
+          <DivContainerStyled>
+            <MapCards />
+          </DivContainerStyled>
+
           <DropdownButtonStyled>
             <DropdownItem onClick={() => onEdit(data._id)} eventKey="1">
               Edit
             </DropdownItem>
-            <DropdownItem onClick={() => onDelete(data._id, data.name)} eventKey="2">
+            <DropdownItem
+              onClick={() => onDelete(data._id, data.name)}
+              eventKey="2"
+            >
               Delete
             </DropdownItem>
           </DropdownButtonStyled>

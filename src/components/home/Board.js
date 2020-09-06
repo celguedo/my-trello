@@ -2,13 +2,15 @@ import React, { useEffect, useState } from "react";
 /* import { useHistory } from "react-router-dom"; */
 import Panel from "emerald-ui/lib/Panel";
 import styled from "styled-components";
-import { list } from "../../api";
+import { list, card } from "../../api";
 import { FETCH_STATUS } from "../../config";
 import Spinner from "emerald-ui/lib/Spinner";
 import List from "./List";
 import Alert from "./Alert";
 import ModalMesage from "./ModalMesage";
+import ModalCard from "./ModalCard";
 import { getToken, setToken } from "../../utils";
+import Button from "emerald-ui/lib/Button/Button";
 
 const PanelStyled = styled(Panel)`
   padding: 20px;
@@ -27,12 +29,16 @@ const DivStyled = styled.div`
   white-space: nowrap;
 `;
 
+export const StyledBottonRight = styled(Button)`
+  float: right;
+`;
+
 export default function Board() {
-  const [lists, setList] = useState({
-    content: null,
+  const [boardData, setBoardData] = useState({
+    lists: [],
+    cards: [],
     fetchStatus: FETCH_STATUS.LOADING,
   });
-  /* const history = useHistory(); */
   const [alertText, setAlertText] = useState("");
   const [alertShow, setAlertShow] = useState(false);
   const [modalText, setModalText] = useState("");
@@ -40,37 +46,51 @@ export default function Board() {
   const [modalConfirmText, setmodalConfirmText] = useState("");
   const [modalConfirm, setModalConfirm] = useState(false);
   const [currentList, setcurrentList] = useState();
+  const [modalShowCard, setModalShowCard] = useState(false); //indicate if the modal of view/edit card is show
+  const [isEditingCard, setIsEditingCard] = useState(true); //indicate if the card will be edit
 
   useEffect(() => {
-    getList();
+    getBoardData();
   }, []);
 
-  const getList = async () => {
-    let token = getToken();
-    if (token === null) {
-      setToken("");
-      token = "";
-    }
-    const listResponse = await list.getList(token);
-    if (listResponse.data) {
-      setList({
-        content: listResponse.data.lists,
-        fetchStatus: FETCH_STATUS.LOADED,
-      });
-    } else {
-      setList({
-        content: null,
+  const getBoardData = async () => {
+    try {
+      let token = getToken();
+      if (token === null) {
+        setToken("");
+        token = "";
+      }
+      const listResponse = await list.getList(token);
+      const cardResponse = await card.getCard(token);
+      if (listResponse.data) {
+        setBoardData({
+          lists: listResponse.data.lists,
+          cards: cardResponse.data.cards,
+          fetchStatus: FETCH_STATUS.LOADED,
+        });
+      }
+    } catch (err) {
+      console.error("error getting board data:", err);
+      setBoardData({
+        lists: [],
+        card: [],
         fetchStatus: FETCH_STATUS.NOT_LOADED,
       });
     }
   };
 
   const ListsAggruped = () => {
-    const { content } = lists;
+    const { lists, cards } = boardData;
     let listsToView = [];
-    listsToView = content.map((ele, i) => {
+    listsToView = lists.map((ele, i) => {
       return (
-        <List key={i} data={ele} onDelete={deleteList} onEdit={editList} />
+        <List
+          key={i}
+          data={ele}
+          onDelete={deleteList}
+          onEdit={editList}
+          cards={cards.filter((item) => item.listId === ele._id)}
+        />
       );
     });
     listsToView.push(<List key={999} newEdit={true} saveList={createList} />);
@@ -103,7 +123,7 @@ export default function Board() {
       const deleteListResponse = await list.deleteList(token, currentList);
       if (deleteListResponse.data) {
         setModalConfirm(false);
-        getList();
+        getBoardData();
       }
     } catch (err) {
       console.log("An error while delete of list:", err);
@@ -116,7 +136,12 @@ export default function Board() {
 
   const closeModalMessage = () => {
     setModalShow(false);
-    getList()
+    getBoardData();
+  };
+
+  const createCard = async () => {
+    setIsEditingCard(true);
+    setModalShowCard(true);
   };
 
   return (
@@ -134,10 +159,24 @@ export default function Board() {
         primaryOption={deleteListConfirm}
         cancelOption={setModalConfirm}
       />
+      {/* Create a new card Modal */}
+      <ModalCard
+        show={modalShowCard}
+        cancelAction={setModalShowCard}
+        isEdit={isEditingCard}
+        primaryAction={getBoardData}
+        listOptions={boardData.lists}
+      />
       <PanelStyled>
-        <h2>Main Board</h2>
+        <div>
+          <label style={{ fontSize: "large", fontWeight: "bold" }}>
+            Main Board
+          </label>
+          <StyledBottonRight onClick={createCard}>New Card</StyledBottonRight>
+        </div>
         <Alert text={alertText} show={alertShow} setShow={setAlertShow} />
-        {lists.fetchStatus === FETCH_STATUS.LOADING ? (
+        <br />
+        {boardData.fetchStatus === FETCH_STATUS.LOADING ? (
           <Spinner />
         ) : (
           <DivStyled>
