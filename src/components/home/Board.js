@@ -5,12 +5,13 @@ import styled from "styled-components";
 import { list, card } from "../../api";
 import { FETCH_STATUS } from "../../constants";
 import Spinner from "emerald-ui/lib/Spinner";
+import IconDropdown from "emerald-ui/lib/IconDropdown";
+import DropdownItem from "emerald-ui/lib/DropdownItem";
 import List from "./List";
 import Alert from "./Alert";
 import ModalMesage from "./ModalMesage";
 import ModalCard from "./ModalCard";
 import { getToken, setToken } from "../../utils";
-import Button from "emerald-ui/lib/Button/Button";
 
 const PanelStyled = styled(Panel)`
   padding: 20px;
@@ -29,7 +30,7 @@ const DivStyled = styled.div`
   white-space: nowrap;
 `;
 
-export const StyledBottonRight = styled(Button)`
+export const IconDropdownRightStyled = styled(IconDropdown)`
   float: right;
 `;
 
@@ -49,20 +50,27 @@ export default function Board() {
   const [currentCard, setcurrentCard] = useState();
   const [modalShowCard, setModalShowCard] = useState(false); //indicate if the modal of view/edit card is show
   const [isEditingCard, setIsEditingCard] = useState(true); //indicate if the card will be edit
+  const [searchOwnFilters, setSearchOwnFilters] = useState(false);
+  const [searchArchivesFilters, setSearchArchivesFilters] = useState(false);
 
   useEffect(() => {
     getBoardData();
-  }, []);
+  }, [searchOwnFilters, searchArchivesFilters]);
 
   const getBoardData = async () => {
     try {
       let token = getToken();
       if (token === null) {
-        setToken("");
         token = "";
+        setToken(token);
+        
       }
       const listResponse = await list.getList(token);
-      const cardResponse = await card.getCard(token);
+      const cardResponse = await card.getCard(token, {
+        own: searchOwnFilters,
+        archive: searchArchivesFilters,
+      });
+
       if (listResponse.data) {
         setBoardData({
           lists: listResponse.data.lists,
@@ -114,7 +122,9 @@ export default function Board() {
   };
 
   const deleteList = async (idList, nameList) => {
-    setmodalConfirmText(`Are you sure of delete this List "${nameList}" ?`);
+    setmodalConfirmText(
+      `Are you sure of delete this List "${nameList}" ?\nThis action will remove all cards from the list`
+    );
     setcurrentList(idList);
     setModalConfirm(true);
   };
@@ -144,6 +154,12 @@ export default function Board() {
   const createCard = async () => {
     setIsEditingCard(true);
     setModalShowCard(true);
+  };
+
+  const filterCards = async ({ own = false, archive = false }) => {
+    setSearchOwnFilters(own);
+    setSearchArchivesFilters(archive);
+    
   };
 
   const viewCard = (cardData) => {
@@ -181,7 +197,33 @@ export default function Board() {
           <label style={{ fontSize: "large", fontWeight: "bold" }}>
             Main Board
           </label>
-          <StyledBottonRight onClick={createCard}>New Card</StyledBottonRight>
+          <IconDropdownRightStyled
+            ariaLabel="See more options"
+            icon="more_vert"
+          >
+            <DropdownItem onClick={createCard} eventKey="1">
+              Create a new Card
+            </DropdownItem>
+            <DropdownItem separator />
+            <DropdownItem
+              onClick={() => filterCards({ own: true })}
+              eventKey="2"
+            >
+              Search cards created by me
+            </DropdownItem>
+            <DropdownItem
+              onClick={() => filterCards({ archive: true })}
+              eventKey="3"
+            >
+              Search archives cards
+            </DropdownItem>
+            <DropdownItem
+              onClick={() => filterCards({ archive: false, own: false })}
+              eventKey="4"
+            >
+              View all cards
+            </DropdownItem>
+          </IconDropdownRightStyled>
         </div>
         <Alert text={alertText} show={alertShow} setShow={setAlertShow} />
         <br />

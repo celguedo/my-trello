@@ -92,16 +92,39 @@ export default function ModalMessage({
   };
 
   const saveEditCard = async () => {
-    const token = getToken();
-    const editData = {
-      idCard: currentCard._id,
-      listId:listOfCard
-    };
-    console.log("saveEditCard -> editData", editData);
-    let res = await card.updateCard(token, editData);
-    console.log("saveEditCard -> res", res);
-    primaryAction();
-    cancelAction();
+    try {
+      const token = getToken();
+      if (!listOfCard) {
+        setTextStatus("Please make a change to save");
+        setShowTextStatus(true);
+      } else {
+        const editData = {
+          idCard: currentCard._id,
+          listId: listOfCard,
+        };
+        await card.updateCard(token, editData);
+        
+        primaryAction();
+        cancelAction();
+      }
+    } catch (err) {
+      setTextStatus("The card was not created please try again");
+      setShowTextStatus(true);
+      console.error("An error while the card was created: ", err);
+    }
+  };
+
+  const deleteCard = async () => {
+    try {
+      const token = getToken();
+      await card.deleteCard(token, currentCard._id);
+      primaryAction();
+      cancelAction();
+    } catch (err) {
+      setTextStatus("The card was not created please try again");
+      setShowTextStatus(true);
+      console.error("An error while the card was created: ", err);
+    }
   };
 
   return (
@@ -183,6 +206,11 @@ export default function ModalMessage({
               currentSelect={currentCard.listId}
               options={listOptions}
             />
+            <Alert
+              text={textStatus}
+              show={showTextStatus}
+              setShow={setShowTextStatus}
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => cancelAction()} shape="flat" color="info">
@@ -190,7 +218,9 @@ export default function ModalMessage({
             </Button>
             <Button>Edit</Button>
             <Button color="warning">Archive</Button>
-            <Button color="danger">Delete</Button>
+            <Button color="danger" onClick={deleteCard}>
+              Delete
+            </Button>
             <Button color="success" onClick={saveEditCard}>
               Save Changes
             </Button>

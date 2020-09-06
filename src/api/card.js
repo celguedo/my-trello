@@ -17,17 +17,17 @@ export const updateCard = async (token, card) => {
   );
 };
 
-/* export const deleteList = async (token, id) => {
-  return await myTrelloRequestInstance.post(
-    `${config.SERVER_URL}/list/delete`,
-    { id },
+export const deleteCard = async (token, id) => {
+  return await myTrelloRequestInstance.delete(
+    `${config.SERVER_URL}/card/delete/${id}`,
     { headers: { "x-auth-token": token } }
   );
 };
- */
 
-export const getCard = async (token) => {
+export const getCard = async (token, filters) => {
+  console.log("getCard -> filters", filters);
   return await myTrelloRequestInstance.get(`${config.SERVER_URL}/card/get`, {
+    params: filters,
     headers: { "x-auth-token": token },
   });
 };
