@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import Modal from "emerald-ui/lib/Modal";
 import Button from "emerald-ui/lib/Button";
 import SingleSelect from "emerald-ui/lib/SingleSelect";
+import Label from "emerald-ui/lib/Label";
+import TextField from "emerald-ui/lib/TextField";
 import Alert from "./Alert";
 import { card } from "../../api";
-import { getToken, mapLabelPositionCard } from "../../utils";
-import { colorOptions, positionOptions } from "../../constants";
-import Label from "emerald-ui/lib/Label/Label";
-import {LabelRight} from "./Card";
+import { getToken, mapLabelPriorityCard } from "../../utils";
+import { colorOptions, priorityOptions } from "../../constants";
+import { LabelRight } from "./Card";
 
 export default function ModalMessage({
   show,
@@ -17,18 +18,19 @@ export default function ModalMessage({
   listOptions,
   currentCard,
 }) {
-  const [title, setTitle] = useState();
-  const [description, setDescription] = useState();
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
   const [listOfCard, setListOfCard] = useState();
   const [color, setColor] = useState();
-  const [position, setPosition] = useState();
+  const [priority, setPriority] = useState();
   const [textStatus, setTextStatus] = useState();
   const [showTextStatus, setShowTextStatus] = useState(false);
+  const [enableEditionFilds, setEnableEditionFilds] = useState(false);
   let labelCard;
 
   if (listOptions) listOptions.forEach((e) => (e.value = e._id));
 
-  if (!isEdit) labelCard = mapLabelPositionCard(currentCard.position);
+  if (!isEdit) labelCard = mapLabelPriorityCard(currentCard.priority);
 
   const saveNewCard = async () => {
     if (!title) {
@@ -42,7 +44,7 @@ export default function ModalMessage({
           description,
           listId: listOfCard || listOptions[0]._id,
           color,
-          position: position || "low",
+          priority: priority || "low",
         };
         await card.createCard(token, newCard);
         restartField();
@@ -60,7 +62,7 @@ export default function ModalMessage({
     setTitle();
     setDescription();
     setListOfCard();
-    setPosition();
+    setPriority();
     setColor();
   };
 
@@ -95,16 +97,20 @@ export default function ModalMessage({
   const saveEditCard = async () => {
     try {
       const token = getToken();
-      if (!listOfCard) {
+      if (!listOfCard && !title && !description && !color && !priority) {
         setTextStatus("Please make a change to save");
         setShowTextStatus(true);
       } else {
         const editData = {
           idCard: currentCard._id,
           listId: listOfCard,
+          title,
+          description,
+          color,
+          priority
         };
         await card.updateCard(token, editData);
-
+        setEnableEditionFilds(false);
         primaryAction();
         cancelAction();
       }
@@ -131,6 +137,10 @@ export default function ModalMessage({
       setShowTextStatus(true);
       console.error("An error while the card was updated: ", err);
     }
+  };
+
+  const toogleEditionFields = () => {
+    setEnableEditionFilds(!enableEditionFilds);
   };
 
   const deleteCard = async () => {
@@ -181,12 +191,12 @@ export default function ModalMessage({
                 options={colorOptions}
               />
 
-              <label>Select a position to new card </label>
+              <label>Select a priority for the new card </label>
               <SelectOption
                 id="s3"
-                onSelect={setPosition}
-                currentSelect={position}
-                options={positionOptions}
+                onSelect={setPriority}
+                currentSelect={priority}
+                options={priorityOptions}
               />
             </div>
             <Alert
@@ -208,17 +218,66 @@ export default function ModalMessage({
         <>
           <Modal.Header>
             <Modal.Title>
-              <Label color={labelCard.colorLabel}>{labelCard.label}</Label>
-              <b>{` ${currentCard.title}`}</b>
-              {!currentCard.status && <LabelRight color="warning">This card is archived</LabelRight>}
+              {enableEditionFilds ? (
+                <TextField
+                  type="text"
+                  label="Title"
+                  placeholder={currentCard.title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  value={title || currentCard.title}
+                />
+              ) : (
+                <>
+                  <Label color={labelCard.colorLabel}>{labelCard.label}</Label>
+                  <b>{` ${currentCard.title}`}</b>
+                </>
+              )}
+              {!currentCard.status && (
+                <LabelRight color="warning">This card is archived</LabelRight>
+              )}
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <div style={{ display: "flex", alignItems: "center" }}>
-              <p>{currentCard.description || "Not description"}</p>
+            <div>
+              {enableEditionFilds ? (
+                <>
+                  <TextField
+                    type="text"
+                    label="Description"
+                    placeholder={
+                      currentCard.description || "Write a description"
+                    }
+                    onChange={(e) => setDescription(e.target.value)}
+                    value={
+                      description || currentCard.description || description
+                    }
+                    style={{ width: "100%" }}
+                  />
+                  <br />
+                  <label>Change color</label>
+                  <br />
+                  <SelectOption
+                    id="s1"
+                    onSelect={setColor}
+                    currentSelect={currentCard.color}
+                    options={colorOptions}
+                  />
+                  <br />
+                  <label>Change priority</label>
+                  <br />
+                  <SelectOption
+                    id="s2"
+                    onSelect={setPriority}
+                    currentSelect={currentCard.priority}
+                    options={priorityOptions}
+                  />
+                </>
+              ) : (
+                <p>{currentCard.description || "Not description"}</p>
+              )}
             </div>
             <hr />
-            {currentCard.status && (
+            {currentCard.status && !enableEditionFilds && (
               <div>
                 <label>Move card to</label>
                 <br />
@@ -241,12 +300,17 @@ export default function ModalMessage({
             <Button onClick={() => cancelAction()} shape="flat" color="info">
               Cancel
             </Button>
-            <Button>Edit</Button>
-            <Button color="warning" onClick={toogleArchiveCard}>
-              {currentCard.status ? "Archive" : "Unarchive"}
+            <Button onClick={toogleEditionFields}>
+              {enableEditionFilds ? "Disable edition fields" : "Enable Edition"}
             </Button>
+            <br />
+            <br />
+
             <Button color="danger" onClick={deleteCard}>
               Delete
+            </Button>
+            <Button color="warning" onClick={toogleArchiveCard}>
+              {currentCard.status ? "Archive" : "Unarchive"}
             </Button>
             {currentCard.status && (
               <Button color="success" onClick={saveEditCard}>

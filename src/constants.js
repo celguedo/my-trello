@@ -11,7 +11,7 @@ module.exports = {
     { value: "danger", name: "Red" },
     { value: "success", name: "Green" },
   ],
-  positionOptions: [
+  priorityOptions: [
     { value: "low", name: "Low" },
     { value: "medium", name: "Medium" },
     { value: "high", name: "High" },

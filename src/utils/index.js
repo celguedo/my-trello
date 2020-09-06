@@ -7,11 +7,11 @@ export function setToken(token) {
   return "ok";
 }
 
-export function mapLabelPositionCard(position) {
+export function mapLabelPriorityCard(priority) {
   let label = "",
     colorLabel = "";
 
-  switch (position) {
+  switch (priority) {
     case "low":
       label = "Low";
       colorLabel = "default";

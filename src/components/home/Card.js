@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Card from "emerald-ui/lib/Card";
 import Label from "emerald-ui/lib/Label";
-import { mapLabelPositionCard } from "../../utils";
+import { mapLabelPriorityCard } from "../../utils";
 
 const CardStyled = styled(Card)`
   margin-top: 20px !important;
@@ -20,7 +20,7 @@ float: right;
 `;
 
 export default function CardTrello({ data, viewCard }) {
-  const { label, colorLabel } = mapLabelPositionCard(data.position);
+  const { label, colorLabel } = mapLabelPriorityCard(data.priority);
 
   return (
     <CardStyled onClick={() => viewCard(data)}>
