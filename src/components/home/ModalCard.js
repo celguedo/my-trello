@@ -4,7 +4,9 @@ import Button from "emerald-ui/lib/Button";
 import SingleSelect from "emerald-ui/lib/SingleSelect";
 import Alert from "./Alert";
 import { card } from "../../api";
-import { getToken } from "../../utils";
+import { getToken, mapLabelPositionCard } from "../../utils";
+import { colorOptions, positionOptions } from "../../constants";
+import Label from "emerald-ui/lib/Label/Label";
 
 export default function ModalMessage({
   show,
@@ -12,19 +14,8 @@ export default function ModalMessage({
   cancelAction,
   isEdit = false,
   listOptions,
+  currentCard,
 }) {
-  if (listOptions) listOptions.forEach((e) => (e.value = e._id));
-  const colorOptions = [
-    { value: "info", name: "Blue" },
-    { value: "warning", name: "Orange" },
-    { value: "danger", name: "Red" },
-    { value: "success", name: "Green" },
-  ];
-  const positionOptions = [
-    { value: "low", name: "Low" },
-    { value: "medium", name: "Medium" },
-    { value: "high", name: "High" },
-  ];
   const [title, setTitle] = useState();
   const [description, setDescription] = useState();
   const [listOfCard, setListOfCard] = useState();
@@ -32,8 +23,13 @@ export default function ModalMessage({
   const [position, setPosition] = useState();
   const [textStatus, setTextStatus] = useState();
   const [showTextStatus, setShowTextStatus] = useState(false);
+  let labelCard;
 
-  const saveCard = async () => {
+  if (listOptions) listOptions.forEach((e) => (e.value = e._id));
+
+  if (!isEdit) labelCard = mapLabelPositionCard(currentCard.position);
+
+  const saveNewCard = async () => {
     if (!title) {
       setTextStatus("Please write a title for the card");
       setShowTextStatus(true);
@@ -52,7 +48,7 @@ export default function ModalMessage({
         await primaryAction();
         cancelAction();
       } catch (err) {
-        setTextStatus("the card was not created please try again");
+        setTextStatus("The card was not created please try again");
         setShowTextStatus(true);
         console.error("An error while the card was created: ", err);
       }
@@ -69,7 +65,13 @@ export default function ModalMessage({
 
   const SelectOption = ({ id, options, onSelect, currentSelect }) => {
     return (
-      <SingleSelect onSelect={onSelect} id={id}>
+      <SingleSelect
+        onSelect={(ele) => {
+          console.log("SelectOption -> ele", ele);
+          onSelect(ele);
+        }}
+        id={id}
+      >
         {options ? (
           options.map((ele, i) => {
             return (
@@ -87,6 +89,19 @@ export default function ModalMessage({
         )}
       </SingleSelect>
     );
+  };
+
+  const saveEditCard = async () => {
+    const token = getToken();
+    const editData = {
+      idCard: currentCard._id,
+      listId:listOfCard
+    };
+    console.log("saveEditCard -> editData", editData);
+    let res = await card.updateCard(token, editData);
+    console.log("saveEditCard -> res", res);
+    primaryAction();
+    cancelAction();
   };
 
   return (
@@ -142,26 +157,43 @@ export default function ModalMessage({
             <Button onClick={() => cancelAction()} shape="flat" color="info">
               Cancel
             </Button>
-            <Button onClick={saveCard} color="success">
+            <Button onClick={saveNewCard} color="success">
               Save Card
             </Button>
           </Modal.Footer>
         </>
       ) : (
         <>
-          <Modal.Header closeButton={true}>
-            <Modal.Title>Create a new Card Orifinal</Modal.Title>
+          <Modal.Header>
+            <Modal.Title>
+              <Label color={labelCard.colorLabel}>{labelCard.label}</Label>
+              <b>{` ${currentCard.title}`}</b>
+            </Modal.Title>
           </Modal.Header>
           <Modal.Body>
             <div style={{ display: "flex", alignItems: "center" }}>
-              <p>Description</p>
+              <p>{currentCard.description || "Not description"}</p>
             </div>
+            <hr />
+            <label>Move card to</label>
+            <br />
+            <SelectOption
+              id="s1"
+              onSelect={setListOfCard}
+              currentSelect={currentCard.listId}
+              options={listOptions}
+            />
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={() => cancelAction()} shape="flat" color="info">
               Cancel
             </Button>
-            <Button color="danger">Update profile</Button>
+            <Button>Edit</Button>
+            <Button color="warning">Archive</Button>
+            <Button color="danger">Delete</Button>
+            <Button color="success" onClick={saveEditCard}>
+              Save Changes
+            </Button>
           </Modal.Footer>
         </>
       )}

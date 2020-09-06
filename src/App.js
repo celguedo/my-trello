@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Switch, Route } from "react-router-dom";
 import { access } from "./api";
-import { FETCH_STATUS } from "./config";
+import { FETCH_STATUS } from "./constants";
 import Home from "./components/home/Home";
 import Login from "./components/access/Login";
 import Register from "./components/access/Register";

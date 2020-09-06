@@ -1,5 +1,5 @@
 import { myTrelloRequestInstance } from "./";
-const config = require("../config");
+const config = require("../constants");
 
 export const createList = async (token, name) => {
   return await myTrelloRequestInstance.post(

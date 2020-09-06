@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import Card from "emerald-ui/lib/Card";
 import Label from "emerald-ui/lib/Label";
+import { mapLabelPositionCard } from "../../utils";
 
 const CardStyled = styled(Card)`
   margin-top: 20px !important;
@@ -14,31 +15,11 @@ const DivStyled = styled.div`
   position: relative;
 `;
 
-export default function CardTrello({ data }) {
-  let label = "",
-    colorLabel = "";
-
-  switch (data.position) {
-    case "low":
-      label = "Low";
-      colorLabel = "default";
-      break;
-    case "medium":
-      label = "Medium";
-      colorLabel = "info";
-      break;
-    case "high":
-      label = "High";
-      colorLabel = "danger";
-      break;
-  }
-
-  const viewCard = ()=>{
-      console.log('Ver card');
-  }
+export default function CardTrello({ data, viewCard }) {
+  const { label, colorLabel } = mapLabelPositionCard(data.position);
 
   return (
-    <CardStyled onClick={viewCard}>
+    <CardStyled onClick={() => viewCard(data)}>
       <Card.Header color={data.color}>
         <h1 className={`eui-card-header-title`}>
           <Label color={colorLabel}>{label}</Label>
@@ -46,7 +27,10 @@ export default function CardTrello({ data }) {
       </Card.Header>
       <DivStyled>
         <h2 className="eui-card-title">{data.title}</h2>
-        <p><b>Created by: </b>{data.nameCreatedBy}</p>
+        <p>
+          <b>Created by: </b>
+          {data.nameCreatedBy}
+        </p>
       </DivStyled>
     </CardStyled>
   );

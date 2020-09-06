@@ -5,8 +5,8 @@ import Button from "emerald-ui/lib/Button";
 export default function ModalMessage({
   text,
   show,
-  primaryOption,
-  cancelOption,
+  primaryAction,
+  cancelAction,
 }) {
   return (
     <Modal show={show}>
@@ -17,10 +17,8 @@ export default function ModalMessage({
         <div style={{ display: "flex", alignItems: "center" }}>{text}</div>
       </Modal.Body>
       <Modal.Footer>
-        {cancelOption && (
-          <Button onClick={() => cancelOption()}>Cancel</Button>
-        )}
-        <Button onClick={() => primaryOption()} color="success">
+        {cancelAction && <Button onClick={() => cancelAction()}>Cancel</Button>}
+        <Button onClick={() => primaryAction()} color="success">
           Accept
         </Button>
       </Modal.Footer>

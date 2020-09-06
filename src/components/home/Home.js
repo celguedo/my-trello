@@ -6,7 +6,7 @@ import Navbar from "./Navbar";
 import Panel from "emerald-ui/lib/Panel";
 import Button from "emerald-ui/lib/Button";
 import { access } from "../../api";
-import { FETCH_STATUS } from "../../config";
+import { FETCH_STATUS } from "../../constants";
 import Spinner from "emerald-ui/lib/Spinner";
 import styled from "styled-components";
 import Board from "./Board";

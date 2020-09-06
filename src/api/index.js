@@ -3,7 +3,7 @@ import * as access from "./access";
 import * as list from "./list";
 import * as card from "./card";
 
-const config = require("../config");
+const config = require("../constants");
 
 export { access, list, card };
 

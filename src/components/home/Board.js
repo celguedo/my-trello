@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Panel from "emerald-ui/lib/Panel";
 import styled from "styled-components";
 import { list, card } from "../../api";
-import { FETCH_STATUS } from "../../config";
+import { FETCH_STATUS } from "../../constants";
 import Spinner from "emerald-ui/lib/Spinner";
 import List from "./List";
 import Alert from "./Alert";
@@ -46,6 +46,7 @@ export default function Board() {
   const [modalConfirmText, setmodalConfirmText] = useState("");
   const [modalConfirm, setModalConfirm] = useState(false);
   const [currentList, setcurrentList] = useState();
+  const [currentCard, setcurrentCard] = useState();
   const [modalShowCard, setModalShowCard] = useState(false); //indicate if the modal of view/edit card is show
   const [isEditingCard, setIsEditingCard] = useState(true); //indicate if the card will be edit
 
@@ -90,6 +91,7 @@ export default function Board() {
           onDelete={deleteList}
           onEdit={editList}
           cards={cards.filter((item) => item.listId === ele._id)}
+          viewCard={viewCard}
         />
       );
     });
@@ -144,20 +146,26 @@ export default function Board() {
     setModalShowCard(true);
   };
 
+  const viewCard = (cardData) => {
+    setcurrentCard(cardData);
+    setIsEditingCard(false);
+    setModalShowCard(true);
+  };
+
   return (
     <div>
       {/* Request response Modal */}
       <ModalMesage
         show={modalShow}
         text={modalText}
-        primaryOption={closeModalMessage}
+        primaryAction={closeModalMessage}
       />
       {/* Confirm Delete Modal*/}
       <ModalMesage
         show={modalConfirm}
         text={modalConfirmText}
-        primaryOption={deleteListConfirm}
-        cancelOption={setModalConfirm}
+        primaryAction={deleteListConfirm}
+        cancelAction={setModalConfirm}
       />
       {/* Create a new card Modal */}
       <ModalCard
@@ -166,6 +174,7 @@ export default function Board() {
         isEdit={isEditingCard}
         primaryAction={getBoardData}
         listOptions={boardData.lists}
+        currentCard={currentCard}
       />
       <PanelStyled>
         <div>

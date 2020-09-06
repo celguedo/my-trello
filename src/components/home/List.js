@@ -47,12 +47,13 @@ export default function List({
   onEdit,
   newEdit = false,
   saveList,
+  viewCard
 }) {
   const [newListName, setNewListName] = useState("");
 
   const MapCards = () => {
     const Cards = cards.map((ele) => {
-      return <Card key={ele._id} data={ele} />;
+      return <Card key={ele._id} data={ele} viewCard={viewCard}/>;
     });
     return Cards;
   };
