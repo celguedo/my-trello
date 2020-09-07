@@ -25,7 +25,6 @@ export const deleteCard = async (token, id) => {
 };
 
 export const getCard = async (token, filters) => {
-  console.log("getCard -> filters", filters);
   return await myTrelloRequestInstance.get(`${config.SERVER_URL}/card/get`, {
     params: filters,
     headers: { "x-auth-token": token },

@@ -105,6 +105,7 @@ export default function ModalMessage({
       if (!listOfCard && !title && !description && !color && !priority) {
         setTextStatus("Please make a change to save");
         setShowTextStatus(true);
+        setShowSpinner(false);
       } else {
         const editData = {
           idCard: currentCard._id,
@@ -115,6 +116,7 @@ export default function ModalMessage({
           priority,
         };
         await card.updateCard(token, editData);
+        restartField();
         setEnableEditionFilds(false);
         setShowSpinner(false);
         primaryAction();
@@ -267,7 +269,7 @@ export default function ModalMessage({
                   <label>Change color</label>
                   <br />
                   <SelectOption
-                    id="s1"
+                    id="s4"
                     onSelect={setColor}
                     currentSelect={currentCard.color}
                     options={colorOptions}
@@ -276,7 +278,7 @@ export default function ModalMessage({
                   <label>Change priority</label>
                   <br />
                   <SelectOption
-                    id="s2"
+                    id="s5"
                     onSelect={setPriority}
                     currentSelect={currentCard.priority}
                     options={priorityOptions}
@@ -292,9 +294,9 @@ export default function ModalMessage({
                 <label>Move card to</label>
                 <br />
                 <SelectOption
-                  id="s1"
+                  id="s6"
                   onSelect={setListOfCard}
-                  currentSelect={currentCard.listId}
+                  currentSelect={listOfCard || currentCard.listId}
                   options={listOptions}
                 />
               </div>
