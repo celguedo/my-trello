@@ -1,3 +1,11 @@
+## MyTrello App
+
+This application is to simulate the characteristics of a workflow using a board, where tasks are created, edited and moved. 
+
+You can find the application displayed at the following link: http://my-trello-caep.s3-website-us-east-1.amazonaws.com/
+
+Below you will see some details.
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
