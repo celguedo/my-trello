@@ -60,6 +60,7 @@ export default function Board() {
 
   useEffect(() => {
     getBoardData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchOwnFilters, searchArchivesFilters]);
 
   const getBoardData = async () => {
