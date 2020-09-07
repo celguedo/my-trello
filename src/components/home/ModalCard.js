@@ -4,6 +4,7 @@ import Button from "emerald-ui/lib/Button";
 import SingleSelect from "emerald-ui/lib/SingleSelect";
 import Label from "emerald-ui/lib/Label";
 import TextField from "emerald-ui/lib/TextField";
+import Spinner from "emerald-ui/lib/Spinner";
 import Alert from "./Alert";
 import { card } from "../../api";
 import { getToken, mapLabelPriorityCard } from "../../utils";
@@ -26,6 +27,7 @@ export default function ModalMessage({
   const [textStatus, setTextStatus] = useState();
   const [showTextStatus, setShowTextStatus] = useState(false);
   const [enableEditionFilds, setEnableEditionFilds] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
   let labelCard;
 
   if (listOptions) listOptions.forEach((e) => (e.value = e._id));
@@ -38,6 +40,7 @@ export default function ModalMessage({
       setShowTextStatus(true);
     } else {
       try {
+        setShowSpinner(true);
         const token = getToken();
         const newCard = {
           title,
@@ -48,7 +51,8 @@ export default function ModalMessage({
         };
         await card.createCard(token, newCard);
         restartField();
-        await primaryAction();
+        setShowSpinner(false);
+        primaryAction();
         cancelAction();
       } catch (err) {
         setTextStatus("The card was not created please try again");
@@ -97,6 +101,7 @@ export default function ModalMessage({
   const saveEditCard = async () => {
     try {
       const token = getToken();
+      setShowSpinner(true);
       if (!listOfCard && !title && !description && !color && !priority) {
         setTextStatus("Please make a change to save");
         setShowTextStatus(true);
@@ -107,10 +112,11 @@ export default function ModalMessage({
           title,
           description,
           color,
-          priority
+          priority,
         };
         await card.updateCard(token, editData);
         setEnableEditionFilds(false);
+        setShowSpinner(false);
         primaryAction();
         cancelAction();
       }
@@ -123,6 +129,7 @@ export default function ModalMessage({
 
   const toogleArchiveCard = async () => {
     try {
+      setShowSpinner(true);
       const token = getToken();
       const editData = {
         idCard: currentCard._id,
@@ -130,6 +137,7 @@ export default function ModalMessage({
       };
       await card.updateCard(token, editData);
 
+      setShowSpinner(false);
       primaryAction();
       cancelAction();
     } catch (err) {
@@ -145,8 +153,10 @@ export default function ModalMessage({
 
   const deleteCard = async () => {
     try {
+      setShowSpinner(true);
       const token = getToken();
       await card.deleteCard(token, currentCard._id);
+      setShowSpinner(false);
       primaryAction();
       cancelAction();
     } catch (err) {
@@ -319,6 +329,11 @@ export default function ModalMessage({
             )}
           </Modal.Footer>
         </>
+      )}
+      {showSpinner && (
+        <div className="panelCenter" style={{ padding: "15px" }}>
+          <Spinner />
+        </div>
       )}
     </Modal>
   );

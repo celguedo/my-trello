@@ -12,9 +12,9 @@ const ListContainer = styled(CardGrid)`
   box-shadow: 7px 4px 49px -16px rgba(0, 0, 0, 0.64);
   padding: 20px;
   width: 300px;
-  min-width: 230px;
+  min-width: 250px;
   min-height: 500px;
-  height: 800px;
+  height: 900px;
   margin: 0 10px 0 0;
   display: inline-block;
 `;
@@ -37,7 +37,7 @@ const DivStyled = styled.div`
 
 const DivContainerStyled = styled.div`
   overflow-y: auto;
-  height: 740px;
+  height: 810px;
 `;
 
 export default function List({
