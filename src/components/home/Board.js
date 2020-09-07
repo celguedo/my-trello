@@ -29,6 +29,11 @@ const DivStyled = styled.div`
   padding: 10px;
   white-space: nowrap;
 `;
+const H3Styled = styled.h3`
+  text-align: center;
+  font-weight: bold;
+  margin-top: 50px;
+`;
 
 export const IconDropdownRightStyled = styled(IconDropdown)`
   float: right;
@@ -200,7 +205,7 @@ export default function Board() {
             Main Board
             {(searchOwnFilters || searchArchivesFilters) && (
               <span style={{ fontSize: "small", fontWeight: "bold" }}>
-               {` - (A search filter activated)`}
+                {` - (A search filter activated)`}
               </span>
             )}
           </label>
@@ -242,6 +247,7 @@ export default function Board() {
           </DivStyled>
         )}
       </PanelStyled>
+      <H3Styled>Condor Labs - Carlos Elguedo - 2020 - ©</H3Styled>
     </div>
   );
 }
