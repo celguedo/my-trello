@@ -1,5 +1,5 @@
 module.exports = {
-  SERVER_URL: "http://localhost:3002",
+  SERVER_URL: "http://54.233.207.61:3000",
   FETCH_STATUS: {
     NOT_LOADED: "not_loaded",
     LOADING: "loading",

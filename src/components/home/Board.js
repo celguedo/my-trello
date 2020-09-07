@@ -15,7 +15,7 @@ import { getToken, setToken } from "../../utils";
 
 const PanelStyled = styled(Panel)`
   padding: 20px;
-  margin: 20px;
+  margin: 50px;
   -webkit-box-shadow: -8px 14px 27px 0px rgba(0, 0, 0, 0.61);
   -moz-box-shadow: -8px 14px 27px 0px rgba(0, 0, 0, 0.61);
   box-shadow: -8px 14px 27px 0px rgba(0, 0, 0, 0.61);
