@@ -16,7 +16,7 @@ export default function NavbarTrello({ name, logout }) {
     <Navbar breakAt="sm" theme="dark">
       <Navbar.Brand>
         <a href="/">
-          <img src="icon_my_trello.png" alt="My Trello" />
+          <img src="/assets/imgs/icon_my_trello.png" alt="My Trello" />
         </a>
       </Navbar.Brand>
 
@@ -27,8 +27,6 @@ export default function NavbarTrello({ name, logout }) {
           id="dd2"
           title={<Avatar title={initialsName} />}
         >
-          <DropdownItem eventKey="1">Search Cards Created by me</DropdownItem>
-          <DropdownItem separator />
           <DropdownItem eventKey="4" onClick={logout}>
             Logout
           </DropdownItem>

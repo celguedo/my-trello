@@ -86,9 +86,9 @@ export default function List({
           </DivContainerStyled>
 
           <DropdownButtonStyled>
-            <DropdownItem onClick={() => onEdit(data._id)} eventKey="1">
+            {/* <DropdownItem onClick={() => onEdit(data._id)} eventKey="1">
               Edit
-            </DropdownItem>
+            </DropdownItem> */}
             <DropdownItem
               onClick={() => onDelete(data._id, data.name)}
               eventKey="2"

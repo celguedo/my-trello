@@ -41,8 +41,17 @@ export default function Home() {
             <Spinner />
           ) : (
             <PanelStyled>
-              <h1>Welcome to My-Trello app</h1>
-              <h3>please choose your way</h3>
+              <img
+                style={{ width: "100%" }}
+                src="/assets/imgs/my_trello_app_bg.png"
+                alt="My Trello"
+              />
+              <h1>
+                <b>Welcome to My-Trello app</b>
+              </h1>
+              <h3>
+                <b>please choose your way</b>
+              </h3>
               <br />
               <Link to="/login">
                 <Button>Log in</Button>
@@ -55,7 +64,9 @@ export default function Home() {
 
               <br />
 
-              <h5>Carlos Andres Elguedo</h5>
+              <h5>
+                <b>By Carlos Andres Elguedo</b>
+              </h5>
             </PanelStyled>
           )}
         </div>
