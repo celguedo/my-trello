@@ -1,8 +1,9 @@
 ## MyTrello App
-
 This application is to simulate the characteristics of a workflow using a board, where tasks are created, edited and moved. 
 
 You can find the application displayed at the following link: http://my-trello-caep.s3-website-us-east-1.amazonaws.com/
+
+![preview](https://i.ibb.co/cJKMftG/Captura-de-pantalla-2020-09-07-a-las-22-16-26.png)
 
 Below you will see some details.
 
